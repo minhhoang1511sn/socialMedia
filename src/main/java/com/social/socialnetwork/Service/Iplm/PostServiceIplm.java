@@ -165,7 +165,12 @@ public class PostServiceIplm implements PostService {
 
     @Override
     public List<Post> gettingPostByFriend() {
-        List<Post> newfeeds = postRepository.findAllPostOrderByCreateDate();
+        List<User> users = userRepository.getAllUser();
+
+        List<Post> newfeeds = new ArrayList<>();
+        users.forEach(u->{
+            newfeeds.addAll(u.getPosts());
+        });
    return  newfeeds;
     }
     @Override
