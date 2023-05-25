@@ -30,11 +30,10 @@ public class PostController {
     @PostMapping(value = "/post", consumes = {
             "multipart/form-data"})
     public ResponseEntity<?> createPost(@ModelAttribute  PostReq postReq,@RequestParam(value = "image", required =
-            false) MultipartFile image, @RequestParam(value = "video", required =
-            false) MultipartFile video)
+            false) MultipartFile image)
             throws IOException {
         try {
-            return ResponseEntity.ok(new ResponseDTO(true, "Success", postService.createPost(postReq,image,video)));
+            return ResponseEntity.ok(new ResponseDTO(true, "Success", postService.createPost(postReq,image)));
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
         }
@@ -43,10 +42,9 @@ public class PostController {
     @PutMapping(value = "/update-post", consumes = {
             "multipart/form-data"})
     public ResponseEntity<?> updatePost(@ModelAttribute PostReq postReq,@RequestParam(value = "image", required =
-            false) MultipartFile image, @RequestParam(value = "video", required =
-            false) MultipartFile video){
+            false) MultipartFile image){
         try {
-            return ResponseEntity.ok(new ResponseDTO(true, "Success", postService.updatePost(postReq,image,video)));
+            return ResponseEntity.ok(new ResponseDTO(true, "Success", postService.updatePost(postReq,image)));
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
         }

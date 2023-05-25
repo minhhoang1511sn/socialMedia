@@ -35,7 +35,7 @@ public class PostServiceIplm implements PostService {
     private final UserPostRepository userPostRepository;
     private final UserService userService;
     @Override
-    public Post createPost(PostReq postReq,  MultipartFile images, MultipartFile video)
+    public Post createPost(PostReq postReq,  MultipartFile images)
     {
         Long idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
@@ -110,7 +110,7 @@ public class PostServiceIplm implements PostService {
     }
 
     @Override
-    public Post updatePost(PostReq postReq,  MultipartFile images, MultipartFile video){
+    public Post updatePost(PostReq postReq,  MultipartFile images){
         Post postUpdate = postRepository.findById(postReq.getId()).orElse(null);
         Long idCurrentUser = Utils.getIdCurrentUser();
         if(postUpdate != null && idCurrentUser == postUpdate.getUser().getId())
