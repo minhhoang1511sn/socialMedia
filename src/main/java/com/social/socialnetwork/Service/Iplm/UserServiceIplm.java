@@ -27,7 +27,6 @@ public class UserServiceIplm implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final ConfirmationCodeRepository confirmationCodeRepository;
     private final ImageRepository imageRepository;
-    private final VideoRepository videoRepository;
     private final FriendRepository friendRepository;
     private final UserCommentRepository userCommentRepository;
     private final UserPostRepository userPostRepository;
@@ -192,34 +191,6 @@ public class UserServiceIplm implements UserService {
             });
         return imgByFriend;
     }
-    @Override
-    public List<Video> getAllVideoByUser(Long userId) {
-        User user = userRepository.findUserById(userId);
-        List<Video> videos = videoRepository.getAllVideoByUser(user);
-        return videos;
-    }
-    @Override
-    public List<Video> getvideoByUser(Long userId) {
-        User userfriend = userRepository.findUserById(userId);
-        User curUser = userRepository.findUserById(Utils.getIdCurrentUser());
-        List<Video> videos = getAllVideoByUser(userId);
-        List<Video> videoByFriend = new ArrayList<>();
-            videos.forEach(p ->{
-                if(friendRepository.existsByFirstUserAndSecondUser(curUser,userfriend))
-                {
-                    if(p.getPostType() == PostType.PUBLIC || p.getPostType() == PostType.FRIEND)
-                    {
-                        videoByFriend.add(p);
-                    }
-                }
-                else{
-                    if(p.getPostType() == PostType.PUBLIC)
-                    {
-                        videoByFriend.add(p);
-                    }
-                }
-            });
-        return videoByFriend;
-    }
+
 
 }

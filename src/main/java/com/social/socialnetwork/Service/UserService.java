@@ -4,7 +4,6 @@ import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.model.ConfirmationCode;
 import com.social.socialnetwork.model.Image;
 import com.social.socialnetwork.model.User;
-import com.social.socialnetwork.model.Video;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,7 +24,5 @@ public interface UserService {
      String upAvartar(MultipartFile file)  throws IOException ;
      User getCurrentUser();
      List<Image> getimgByUser(Long userId);
-     List<Video> getvideoByUser(Long userId);
      List<Image> getAllImageByUser(Long userId);
-     List<Video> getAllVideoByUser(Long userId);
 }

@@ -2,16 +2,14 @@ package com.social.socialnetwork.model;
 
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,10 +17,11 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "userComment")
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private UserComment userComment;
     private String content;
-    @JsonBackReference(value = "comment-post")
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Post post;
     private Double rate;

@@ -7,7 +7,6 @@ import com.social.socialnetwork.dto.ResponseDTO;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.model.Image;
 import com.social.socialnetwork.model.User;
-import com.social.socialnetwork.model.Video;
 import com.social.socialnetwork.repository.UserRepository;
 import com.social.socialnetwork.utils.Utils;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -127,9 +126,5 @@ public class UserController {
         List<Image> images = userService.getimgByUser(userId);
         return ResponseEntity.ok().body(new ResponseDTO(true,"Success",images));
     }
-    @GetMapping("/video")
-    public ResponseEntity<?> getVideo(@RequestParam("userId") Long userId){
-        List<Video> video = userService.getvideoByUser(userId);
-        return ResponseEntity.ok().body(new ResponseDTO(true,"Success",video));
-    }
+
 }

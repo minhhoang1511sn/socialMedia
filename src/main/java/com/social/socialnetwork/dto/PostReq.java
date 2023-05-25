@@ -10,10 +10,10 @@ import java.util.List;
 public class PostReq {
     private Long id;
     private Long user;
+    private Long userPost;
     private Long countLike;
     private List<Comment> commentList;
     private Image imageList;
-    private Video videoList;
     private String content;
     private PostType postType;
     private Date createDate;
