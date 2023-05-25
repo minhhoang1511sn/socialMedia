@@ -31,7 +31,7 @@ public class Post {
     @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
     private List<Comment> commentList;
     @OneToOne(cascade = {CascadeType.ALL})
-    @JsonBackReference
+    @JsonManagedReference
     private Image images;
     private Date createDate;
     public Long getId() {

@@ -18,7 +18,7 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imgLink;
-    @JsonIgnore
+    @JsonBackReference
     @OneToOne(fetch = FetchType.EAGER)
     private Post post;
     @JsonBackReference
