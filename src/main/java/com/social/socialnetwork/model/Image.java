@@ -2,6 +2,7 @@ package com.social.socialnetwork.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Image implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imgLink;
-    @JsonBackReference
+    @JsonBackReference(value = "images-post")
     @OneToOne(fetch = FetchType.EAGER)
     private Post post;
     @JsonBackReference
