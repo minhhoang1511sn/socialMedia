@@ -191,6 +191,4 @@ public class UserServiceIplm implements UserService {
             });
         return imgByFriend;
     }
-
-
 }
