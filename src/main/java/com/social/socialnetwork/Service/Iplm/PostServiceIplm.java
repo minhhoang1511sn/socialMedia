@@ -2,6 +2,7 @@ package com.social.socialnetwork.Service.Iplm;
 
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
 import com.social.socialnetwork.Service.PostService;
+import com.social.socialnetwork.Service.UserService;
 import com.social.socialnetwork.dto.PostReq;
 import com.social.socialnetwork.dto.UserReq;
 import com.social.socialnetwork.exception.AppException;
@@ -32,6 +33,7 @@ public class PostServiceIplm implements PostService {
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
     private final UserPostRepository userPostRepository;
+    private final UserService userService;
     @Override
     public Post createPost(PostReq postReq,  MultipartFile images, MultipartFile video)
     {
@@ -39,7 +41,7 @@ public class PostServiceIplm implements PostService {
         boolean check = userRepository.existsById(idCurrentUser);
         if(check){
             Post post = new Post();
-            User user = userRepository.getReferenceById(idCurrentUser);
+            User user = userService.findById(idCurrentUser);
             UserPost userPost = new UserPost();
             userPost.setUserId(user.getId());
             if(user.getAvatarLink()!=null)

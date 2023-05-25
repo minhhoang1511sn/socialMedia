@@ -28,7 +28,7 @@ public class Post {
     @OneToOne(cascade = CascadeType.ALL)
     private UserPost userPost;
     @JsonManagedReference(value = "comment-post")
-    @OneToMany(mappedBy = "post",fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     private List<Comment> commentList;
     @OneToOne(cascade = {CascadeType.ALL})
     @JsonManagedReference(value = "images-post")
