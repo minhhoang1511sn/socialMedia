@@ -30,6 +30,7 @@ public class UserServiceIplm implements UserService {
     private final FriendRepository friendRepository;
     private final UserCommentRepository userCommentRepository;
     private final UserPostRepository userPostRepository;
+    private final UserMessageRepository userMessageRepository;
     @Override
     public User findById(Long id) {
         User user = userRepository.findUserById(id);
@@ -63,6 +64,30 @@ public class UserServiceIplm implements UserService {
                 userUpdate.setRole(userReq.getRole());
             }
             userRepository.save(userUpdate);
+            List<UserComment> userComments = userCommentRepository.findAllByUserId(userUpdate.getId());
+            userComments.forEach(u->{
+                    u.setLastName(userUpdate.getLastName());
+                u.setFirstName(userUpdate.getFirstName());
+                u.setId(userUpdate.getId());
+                    }
+            );
+            userCommentRepository.saveAll(userComments);
+            List<UserPost> userPosts = userPostRepository.findAllByUserId(userUpdate.getId());
+            userPosts.forEach(u->{
+                        u.setLastName(userUpdate.getLastName());
+                        u.setFirstName(userUpdate.getFirstName());
+                        u.setId(userUpdate.getId());
+                    }
+            );
+            userPostRepository.saveAll(userPosts);
+            List<UserMessage> userMessages = userMessageRepository.findAllByUserId(userUpdate.getId());
+            userMessages.forEach(u->{
+                        u.setLastName(userUpdate.getLastName());
+                        u.setFirstName(userUpdate.getFirstName());
+                        u.setId(userUpdate.getId());
+                    }
+            );
+            userMessageRepository.saveAll(userMessages);
             return userUpdate;
         } else return null;
 
@@ -154,6 +179,9 @@ public class UserServiceIplm implements UserService {
         List<UserPost> userPosts = userPostRepository.findAllByUserId(user.getId());
         userPosts.forEach(u -> u.setAvatar(uAvatar));
         userPostRepository.saveAll(userPosts);
+        List<UserMessage> userMessages = userMessageRepository.findAllByUserId(user.getId());
+        userMessages.forEach(u -> u.setAvatar(uAvatar));
+        userMessageRepository.saveAll(userMessages);
         return imgUrl.getImgLink();
     }
     @Override
