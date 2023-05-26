@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConfirmationCodeRepository extends JpaRepository<ConfirmationCode,Long> {
-
+    @Query("select c from ConfirmationCode c where c.code=:code and c.user.email=:email")
     ConfirmationCode findVerificationCodeByCodeAndUser_Email(String code, String email);
-
+    @Query("select c from ConfirmationCode c where c.user.email=:email")
     ConfirmationCode findVerificationCodeByUserEmail(String email);
 
 }

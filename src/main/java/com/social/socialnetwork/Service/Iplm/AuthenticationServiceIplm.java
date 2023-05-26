@@ -101,7 +101,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
             throw new AppException(400,"User not validated");
         }
 
-        User user = verificationCode.getUser();
+        User user = userRepository.findUserByEmail(passwordDTO.getEmail());
             verificationCode.setToken(null);
             confirmationCodeRepository.save(verificationCode);
             user.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));

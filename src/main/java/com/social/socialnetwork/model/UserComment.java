@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "user_comment")
 public class UserComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

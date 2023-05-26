@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "confirmationCode")
+@Table(name = "confirmation_code")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationCode implements Serializable {
@@ -19,7 +19,8 @@ public class ConfirmationCode implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user")
     private User user;
 
     private Date expirationTime;
