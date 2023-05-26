@@ -78,22 +78,27 @@ public class PostServiceIplm implements PostService {
     @Override
     public boolean deletePost(Long id){
         Long idCurrentUser = Utils.getIdCurrentUser();
-        Post postDelete = postRepository.findById(id).orElse(null);
+        Post postDelete = findById(id);
         if(postDelete !=null && postDelete.getUser().getId() == idCurrentUser)
         {
             Image image = postDelete.getImages();
             List<Comment> commentList = postDelete.getCommentList();
             if(image!=null){
                 image.setUser(null);
+                image.setPost(null);
                 imageRepository.deleteById(image.getId());
             }
 
             if(commentList!=null){
                 for (Comment comment : commentList) {
                     comment.setUserComment(null);
+                    comment.setPost(null);
                     commentRepository.deleteById(comment.getId());
                 }
             }
+
+            postDelete.setCommentList(null);
+            postDelete.setImages(null);
             postDelete.setPostType(null);
             postDelete.setUser(null);
             postRepository.deleteById(id);
