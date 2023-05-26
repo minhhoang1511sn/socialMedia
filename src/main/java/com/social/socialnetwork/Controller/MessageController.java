@@ -7,6 +7,7 @@ import com.social.socialnetwork.model.Message;
 import com.social.socialnetwork.model.User;
 import com.social.socialnetwork.repository.MessageRepository;
 import com.social.socialnetwork.repository.UserRepository;
+import com.social.socialnetwork.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,14 @@ public class MessageController {
     public ResponseEntity<?> getAllRecentMessage(@RequestParam Long userId){
         try {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", messageService.findAllRecentMessages(userId)));
+        } catch (Exception e) {
+            return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
+        }
+    }
+    @GetMapping("/find-conversation")
+    public ResponseEntity<?> getConversation(@RequestParam Long userId){
+        try {
+            return ResponseEntity.ok(new ResponseDTO(true, "Success", messageService.findConversation(Utils.getIdCurrentUser(),userId)));
         } catch (Exception e) {
             return ResponseEntity.ok(new ResponseDTO(false, e.getMessage(), null));
         }
