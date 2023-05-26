@@ -5,6 +5,7 @@ import com.social.socialnetwork.Service.UserService;
 import com.social.socialnetwork.dto.MessageDTO;
 import com.social.socialnetwork.model.*;
 import com.social.socialnetwork.repository.MessageRepository;
+import com.social.socialnetwork.repository.UserMessageRepository;
 import com.social.socialnetwork.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,13 +22,14 @@ public class MessageServiceIplm implements MessageService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final UserService userService;
+    private final UserMessageRepository userMessageRepository;
     @Override
     public Collection<MessageDTO> findAllRecentMessages(Long id) {
         Iterable<Message> all = messageRepository.findAllRecentMessages(id);
-        Map<User, MessageDTO> map = new HashMap<>();
+        Map<UserMessage, MessageDTO> map = new HashMap<>();
         all.forEach(m -> {
             MessageDTO messageDTO = modelMapper.map(m,MessageDTO.class);
-            User user = m.getSender().getId().equals(id) ? m.getReceiver() : m.getSender();
+            UserMessage user = m.getUSender().getUserId().equals(id) ? m.getUReceiver() : m.getUSender();
             map.put(user, messageDTO);
         });
         return map.values();
@@ -53,11 +55,26 @@ public class MessageServiceIplm implements MessageService {
     public Message postMessage(MessageDTO messageDTO) {
         User sender = userService.getCurrentUser();
         User receiver = userRepository.findUserById(messageDTO.getReceiver().getId());
+        UserMessage uSender = new UserMessage();
+        UserMessage uRReceiver = new UserMessage();
         Message message = new Message();
+
         message.setMessage(messageDTO.getMessage());
-        message.setReceiver(receiver);
-        message.setSender(sender);
+        message.setUReceiver(uRReceiver);
+        message.setUSender(uSender);
+        if(sender.getAvatarLink()!=null)
+            uSender.setAvatar(sender.getAvatarLink().getImgLink());
+        if(receiver.getAvatarLink()!=null)
+            uRReceiver.setAvatar(receiver.getAvatarLink().getImgLink());
+        uSender.setFirstName(sender.getFirstName());
+        uRReceiver.setFirstName(receiver.getFirstName());
+        uSender.setLastName(sender.getLastName());
+        uRReceiver.setLastName(receiver.getLastName());
+        uSender.setUserId(sender.getId());
+        uRReceiver.setUserId(receiver.getId());
         message.setCreateTime(new Date());
+        userMessageRepository.save(uRReceiver);
+        userMessageRepository.save(uSender);
         messageRepository.save(message);
         return message;
     }
