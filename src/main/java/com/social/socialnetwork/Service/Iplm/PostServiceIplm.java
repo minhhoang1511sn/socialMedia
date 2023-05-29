@@ -176,6 +176,7 @@ public class PostServiceIplm implements PostService {
         users.forEach(u->{
             newfeeds.addAll(u.getPosts());
         });
+        newfeeds.sort(Comparator.comparing(Post::getCreateDate).reversed());
    return  newfeeds;
     }
     @Override
