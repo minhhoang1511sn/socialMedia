@@ -1,6 +1,7 @@
 package com.social.socialnetwork.Service.Iplm;
 
 import com.social.socialnetwork.Service.Cloudinary.CloudinaryUpload;
+import com.social.socialnetwork.Service.FriendService;
 import com.social.socialnetwork.Service.PostService;
 import com.social.socialnetwork.Service.UserService;
 import com.social.socialnetwork.dto.PostReq;
@@ -34,6 +35,7 @@ public class PostServiceIplm implements PostService {
     private final CommentRepository commentRepository;
     private final UserPostRepository userPostRepository;
     private final UserService userService;
+    private final FriendService friendService;
     @Override
     public Post createPost(PostReq postReq,  MultipartFile images)
     {
@@ -171,11 +173,13 @@ public class PostServiceIplm implements PostService {
     @Override
     public List<Post> gettingPostByFriend() {
         List<User> users = userRepository.getAllUser();
-
+        User curU = userService.getCurrentUser();
         List<Post> newfeeds = new ArrayList<>();
         users.forEach(u->{
+            if(friendService.isFriend(curU,u))
             newfeeds.addAll(u.getPosts());
         });
+        newfeeds.addAll(curU.getPosts());
         newfeeds.sort(Comparator.comparing(Post::getCreateDate).reversed());
    return  newfeeds;
     }
