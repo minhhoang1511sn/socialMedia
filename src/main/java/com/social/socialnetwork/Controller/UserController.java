@@ -126,5 +126,9 @@ public class UserController {
         List<Image> images = userService.getimgByUser(userId);
         return ResponseEntity.ok().body(new ResponseDTO(true,"Success",images));
     }
-
+    @GetMapping("/suggest-friend")
+    public ResponseEntity<?> getSuggestFriend(){
+        List<User> suggestFriend = friendService.suggestFriend();
+        return ResponseEntity.ok().body(new ResponseDTO(true,"Success",suggestFriend));
+    }
 }

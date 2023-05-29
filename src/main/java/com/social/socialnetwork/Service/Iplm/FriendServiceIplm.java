@@ -51,6 +51,23 @@ public class FriendServiceIplm implements FriendService {
         }
         return friendUsers;
     }
+
+    @Override
+    public List<User> suggestFriend() {
+        List<User> user = userRepository.findAll();
+        User curU = userRepository.findUserById(Utils.getIdCurrentUser());
+        List<User> suggestFriend = new ArrayList<>();
+        user.forEach(
+                u->{
+                    if(!isFriend(curU,u) && u!=curU)
+                    {
+                        suggestFriend.add(u);
+                    }
+                }
+        );
+        return suggestFriend;
+    }
+
     @Override
     public void saveFriend(User userDto1, Long id) throws NullPointerException{
         Friend friend = new Friend();
