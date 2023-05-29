@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -72,7 +73,7 @@ public class MessageServiceIplm implements MessageService {
         uRReceiver.setLastName(receiver.getLastName());
         uSender.setUserId(sender.getId());
         uRReceiver.setUserId(receiver.getId());
-        message.setCreateTime(new Date());
+        message.setCreateTime(LocalDateTime.now());
         userMessageRepository.save(uRReceiver);
         userMessageRepository.save(uSender);
         messageRepository.save(message);

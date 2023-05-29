@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -27,5 +28,5 @@ public class Message {
     @OneToOne(fetch = FetchType.EAGER)
     private UserMessage uReceiver;
     private String message;
-    private Date createTime;
+    private LocalDateTime createTime;
 }
