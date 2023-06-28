@@ -8,9 +8,9 @@ import java.util.List;
 
 @Data
 public class PostReq {
-    private Long id;
-    private Long user;
-    private Long userPost;
+    private String id;
+    private String user;
+    private String userPost;
     private Long countLike;
     private List<Comment> commentList;
     private Image imageList;

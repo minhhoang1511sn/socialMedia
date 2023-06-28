@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface FriendService {
      Boolean isFriend(User user1, User user2);
-     List<User> getUserFriends(Long id);
+     List<User> getUserFriends(String id);
      List<User> suggestFriend();
 
-     void saveFriend(User userDto1, Long id) throws NullPointerException;
+     void saveFriend(User userDto1, String id) throws NullPointerException;
 
-     List MutualFriends(Long id);
-     boolean unFriend(Long id);
-     User findById(Long id);
+     List MutualFriends(String id);
+     boolean unFriend(String id);
+     User findById(String id);
 }

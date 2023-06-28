@@ -2,20 +2,19 @@ package com.social.socialnetwork.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "notification")
+@Document(collection = "notification")
 public class Notification {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne(fetch = FetchType.EAGER)
+    private String id;
+    @Embedded
     private User user;
     private String content;
     @Enumerated(EnumType.STRING)

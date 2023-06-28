@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class NotificationController {
     private final NotificationService notificationService;
     @GetMapping("/get-all-notifications")
-    public ResponseEntity<?> getAllNotifications(@RequestParam Long userId){
+    public ResponseEntity<?> getAllNotifications(@RequestParam String userId){
         try {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", notificationService.getAllNotificationsByUser(userId)));
         } catch (Exception e) {

@@ -3,6 +3,9 @@ package com.social.socialnetwork.model;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,35 +17,31 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@Document(collection = "user")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String firstName;
     private String lastName;
     private String address;
     private String email;
     private String password;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JsonManagedReference
-    private Image avatarLink;
+    @Embedded
+    private Image image;
     private Date  birthday;
     private String gender;
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+    @DBRef
     private List<Image> images;
-    @JsonManagedReference(value = "user-post")
-    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @DBRef
     private List<Post> posts;
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean Enabled;
-    @JsonIgnore
-    @OneToOne(mappedBy = "user")
+    @Embedded
+    @Transient
     private ConfirmationCode confirmationCode;
 
 

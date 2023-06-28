@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 public class CommentResp {
-    private Long id;
+    private String id;
     private String content;
     private Date create_time;
     private double rate;

@@ -2,26 +2,24 @@ package com.social.socialnetwork.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "friend")
+@Document(collection = "friend")
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "first_user_id", referencedColumnName = "id")
+    private String id;
+    @Embedded
     User firstUser;
 
-    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "second_user_id", referencedColumnName = "id")
+    @Embedded
     User secondUser;
     Date createdDate;
     boolean isAccept;

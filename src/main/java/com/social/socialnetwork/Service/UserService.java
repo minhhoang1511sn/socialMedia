@@ -11,18 +11,18 @@ import java.util.List;
 
 
 public interface UserService {
-     User findById(Long id);
+     User findById(String id);
      List<User> findAllUser();
      User updateUser(UserReq userReq);
      User findUserByEmail(String email);
      List<User> findUserByUserName(String query);
      void changePassword(User user, String newPassword);
      ConfirmationCode SendVerifyCode(String email);
-     boolean disabledUser(Long id);
-     boolean enabledUser(Long id);
+     boolean disabledUser(String id);
+     boolean enabledUser(String id);
      boolean checkIfValidOldPassword(User user, String oldPassword);
      String upAvartar(MultipartFile file)  throws IOException ;
      User getCurrentUser();
-     List<Image> getimgByUser(Long userId);
-     List<Image> getAllImageByUser(Long userId);
+     List<Image> getimgByUser(String userId);
+     List<Image> getAllImageByUser(String userId);
 }

@@ -36,7 +36,7 @@ public class MessageController {
         }
     }
     @GetMapping("/get-recent-message")
-    public ResponseEntity<?> getRecentMessage(@RequestParam Long userId){
+    public ResponseEntity<?> getRecentMessage(@RequestParam String userId){
         try {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", messageService.getRecentMessage(userId)));
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class MessageController {
         }
     }
     @GetMapping("/find-all-recent-message")
-    public ResponseEntity<?> getAllRecentMessage(@RequestParam Long userId){
+    public ResponseEntity<?> getAllRecentMessage(@RequestParam String userId){
         try {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", messageService.findAllRecentMessages(userId)));
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class MessageController {
         }
     }
     @GetMapping("/find-conversation")
-    public ResponseEntity<?> getConversation(@RequestParam Long userId){
+    public ResponseEntity<?> getConversation(@RequestParam String userId){
         try {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", messageService.findConversation(Utils.getIdCurrentUser(),userId)));
         } catch (Exception e) {

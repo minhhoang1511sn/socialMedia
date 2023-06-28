@@ -13,7 +13,7 @@ public class AdminController {
     private final UserService userService;
 
     @PutMapping("/disable-user/{id}")
-    public ResponseEntity<?> DisabledUser(@PathVariable Long id){
+    public ResponseEntity<?> DisabledUser(@PathVariable String id){
         boolean check = userService.disabledUser(id);
         if(check)
             return  ResponseEntity.ok().body(new ResponseDTO(true,"User has been disabled success",
@@ -23,7 +23,7 @@ public class AdminController {
                     null));
     }
     @PutMapping("/enabled-user/{id}")
-    public ResponseEntity<?> EnableUser(@PathVariable Long id){
+    public ResponseEntity<?> EnableUser(@PathVariable String id){
         boolean check = userService.enabledUser(id);
         if(check)
             return  ResponseEntity.ok().body(new ResponseDTO(true,"User has been enabled success",

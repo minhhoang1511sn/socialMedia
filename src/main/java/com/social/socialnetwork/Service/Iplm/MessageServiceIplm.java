@@ -25,8 +25,8 @@ public class MessageServiceIplm implements MessageService {
     private final UserService userService;
     private final UserMessageRepository userMessageRepository;
     @Override
-    public Collection<MessageDTO> findAllRecentMessages(Long id) {
-        Iterable<Message> all = messageRepository.findAllRecentMessages(id);
+    public Collection<MessageDTO> findAllRecentMessages(String id) {
+        List<Message> all = messageRepository.findAllRecentMessages(id);
         Map<UserMessage, MessageDTO> map = new HashMap<>();
         all.forEach(m -> {
             MessageDTO messageDTO = modelMapper.map(m,MessageDTO.class);
@@ -37,7 +37,7 @@ public class MessageServiceIplm implements MessageService {
     }
 
     @Override
-    public List<MessageDTO> findConversation(Long userId, Long companionId) {
+    public List<MessageDTO> findConversation(String userId, String companionId) {
         List<Message> all = messageRepository.findConversation(userId, companionId);
         List<MessageDTO> messages = new LinkedList<>();
         all.forEach(m -> messages.add(modelMapper.map(m,MessageDTO.class)));
@@ -45,7 +45,7 @@ public class MessageServiceIplm implements MessageService {
     }
 
     @Override
-    public MessageDTO getRecentMessage(Long id) {
+    public MessageDTO getRecentMessage(String id) {
         Message message = messageRepository.findFirstBySenderIdOrReceiverIdOrderByIdDesc(id, id);
         MessageDTO messageDTO = modelMapper.map(message,MessageDTO.class);
         return messageDTO;
@@ -63,10 +63,10 @@ public class MessageServiceIplm implements MessageService {
         message.setMessage(messageDTO.getMessage());
         message.setUReceiver(uRReceiver);
         message.setUSender(uSender);
-        if(sender.getAvatarLink()!=null)
-            uSender.setAvatar(sender.getAvatarLink().getImgLink());
-        if(receiver.getAvatarLink()!=null)
-            uRReceiver.setAvatar(receiver.getAvatarLink().getImgLink());
+        if(sender.getImage()!=null)
+            uSender.setAvatar(sender.getImage().getImgLink());
+        if(receiver.getImage()!=null)
+            uRReceiver.setAvatar(receiver.getImage().getImgLink());
         uSender.setFirstName(sender.getFirstName());
         uRReceiver.setFirstName(receiver.getFirstName());
         uSender.setLastName(sender.getLastName());

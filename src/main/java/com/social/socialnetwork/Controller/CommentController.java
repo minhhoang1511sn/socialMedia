@@ -23,7 +23,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/list-comment")
-    public ResponseEntity<?> getListCommentByPost(@RequestParam Long postid){
+    public ResponseEntity<?> getListCommentByPost(@RequestParam String postid){
         return ResponseEntity.ok(new ResponseDTO(true,"Success",commentService.getAllCommentByPost(postid)));
     }
     @PostMapping(value = "/comment",consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +35,7 @@ public class CommentController {
         }
     }
     @DeleteMapping("/comment/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Long id){
+    public ResponseEntity<?> deleteComment(@PathVariable String id){
         Comment comment = commentService.findById(id);
         if (commentService.deleteComment(comment.getId())) {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", null));

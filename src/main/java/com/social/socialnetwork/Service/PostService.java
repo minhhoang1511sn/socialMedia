@@ -13,12 +13,12 @@ import java.util.List;
 
 public interface PostService {
      Post  createPost(PostReq postReq,  MultipartFile images);
-     Post findById(Long id);
-     boolean deletePost(Long id);
-     List<Post> getAllPost(Long id);
+     Post findById(String id);
+     boolean deletePost(String id);
+     List<Post> getAllPost(String id);
      Post updatePost(PostReq postReq,  MultipartFile images);
-     String uploadImage(Long postId, MultipartFile images) ;
+     String uploadImage(String postId, MultipartFile images) ;
      List<Post> gettingPostByFriend();
-     List<Post> getAllPostByUser(Long userId);
+     List<Post> getAllPostByUser(String userId);
 
 }

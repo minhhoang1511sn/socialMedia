@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class ImageReq {
-    private Long id;
+    private String id;
     private String imgLink;
-    private Long postid;
-    private Long userid;
+    private String postid;
+    private String userid;
 }

@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 public interface MessageService {
-    Collection<MessageDTO> findAllRecentMessages(Long id);
+    Collection<MessageDTO> findAllRecentMessages(String id);
 
-    List<MessageDTO> findConversation(Long userId, Long companionId);
+    List<MessageDTO> findConversation(String userId, String companionId);
 
-    MessageDTO getRecentMessage(Long id);
+    MessageDTO getRecentMessage(String id);
 
     Message postMessage(MessageDTO messageDTO);
 }

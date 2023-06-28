@@ -24,7 +24,7 @@ public class NotificationServiceIplm implements NotificationService {
     private final NotificationRepository notificationRepository;
     private final ModelMapper modelMapper;
     @Override
-    public List<Notification> getAllNotificationsByUser(Long userId) {
+    public List<Notification> getAllNotificationsByUser(String userId) {
         User user = userRepository.findUserById(userId);
         List<Notification> notifications = notificationRepository.getNotificationsByUser(user);
         return notifications;
@@ -33,7 +33,7 @@ public class NotificationServiceIplm implements NotificationService {
     @Override
     public Notification changeStatusNoti(NotificationDTO notificationDTO) {
         boolean check = notificationRepository.existsById(notificationDTO.getId());
-        Notification notification = notificationRepository.getReferenceById(notificationDTO.getId());
+        Notification notification = notificationRepository.findNotificationById(notificationDTO.getId());
         if(check)
         {
             notification.setCreateTime(new Date());
@@ -47,7 +47,7 @@ public class NotificationServiceIplm implements NotificationService {
     @Override
     public Notification newNotificaition(NotificationDTO notificationDTO) {
         Notification notification = modelMapper.map(notificationDTO, Notification.class);
-        User user = userRepository.getReferenceById(Utils.getIdCurrentUser());
+        User user = userRepository.findUserById(Utils.getIdCurrentUser());
         notification.setUser(user);
         notification.setCreateTime(new Date());
         return notificationRepository.save(notification);

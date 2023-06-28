@@ -32,7 +32,7 @@ public class UserServiceIplm implements UserService {
     private final UserPostRepository userPostRepository;
     private final UserMessageRepository userMessageRepository;
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         User user = userRepository.findUserById(id);
         return user;
     }
@@ -40,7 +40,7 @@ public class UserServiceIplm implements UserService {
 
     @Override
     public List<User> findAllUser() {
-        List<User> users = userRepository.getAllUser();
+        List<User> users = userRepository.findAll();
         return users;
     }
 
@@ -99,7 +99,7 @@ public class UserServiceIplm implements UserService {
     @Override
     public List<User> findUserByUserName(String query){
 
-        List<User> user = userRepository.searchByFirstAndOrLastName(query);
+        List<User> user = userRepository.findByFirstNameAndLastName(query);
         List<User> result = new ArrayList<>();
         user.forEach(u->{
             if(u.getEnabled()==true)
@@ -126,7 +126,7 @@ public class UserServiceIplm implements UserService {
         return null;
     }
     @Override
-    public boolean disabledUser(Long id) {
+    public boolean disabledUser(String id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null && user.getEnabled())
         {
@@ -138,7 +138,7 @@ public class UserServiceIplm implements UserService {
             throw new AppException(403, "User not found or can not disabled");
     }
     @Override
-    public boolean enabledUser(Long id) {
+    public boolean enabledUser(String id) {
         User user = userRepository.findById(id).orElse(null);
         if (user != null && !user.getEnabled())
         {
@@ -155,20 +155,20 @@ public class UserServiceIplm implements UserService {
     }
     @Override
     public String upAvartar(MultipartFile file) throws IOException {
-        Long id = Utils.getIdCurrentUser();
+        String id = Utils.getIdCurrentUser();
         User user = findById(id);
         if (user == null)
             throw new AppException(404, "User ID not found");
         Image imgUrl = new Image();
-        if (user.getAvatarLink() != null && user.getAvatarLink().getImgLink().startsWith("https://res.cloudinary.com/minhhoang1511/image/upload")) {
-            imgUrl = user.getAvatarLink();
+        if (user.getImage() != null && user.getImage().getImgLink().startsWith("https://res.cloudinary.com/minhhoang1511/image/upload")) {
+            imgUrl = user.getImage();
             imgUrl.setImgLink(cloudinaryUpload.uploadImage(file,imgUrl.getImgLink()));
         }else
             imgUrl.setImgLink(cloudinaryUpload.uploadImage(file,null));
-        imgUrl.setUser(user);
         imgUrl.setPostType(PostType.PUBLIC);
-        user.setAvatarLink(imgUrl);
-        List<Image> imageUser = user.getImages();
+        imageRepository.save(imgUrl);
+        user.setImage(imgUrl);
+        List<Image> imageUser = imageRepository.getAllImageByUser(user);
         imageUser.add(imgUrl);
         user.setImages(imageUser);
         userRepository.save(user);
@@ -191,13 +191,13 @@ public class UserServiceIplm implements UserService {
         return user;
     }
     @Override
-    public List<Image> getAllImageByUser(Long userId) {
+    public List<Image> getAllImageByUser(String userId) {
         User user = userRepository.findUserById(userId);
         List<Image> images = imageRepository.getAllImageByUser(user);
         return images;
     }
     @Override
-    public List<Image> getimgByUser(Long userId) {
+    public List<Image> getimgByUser(String userId) {
         User userfriend = userRepository.findUserById(userId);
         User curUser = userRepository.findUserById(Utils.getIdCurrentUser());
         List<Image> images = getAllImageByUser(userId);

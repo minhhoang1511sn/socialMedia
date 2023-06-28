@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface CommentService {
-    Comment findById(Long id);
+    Comment findById(String id);
     Comment postComment(CommentReq commentReq);
-    List<Comment> getAllCommentByPost(Long postid);
+    List<Comment> getAllCommentByPost(String postid);
     Comment updateComment(CommentReq commentReq);
-    boolean deleteComment(Long id);
+    boolean deleteComment(String id);
 }

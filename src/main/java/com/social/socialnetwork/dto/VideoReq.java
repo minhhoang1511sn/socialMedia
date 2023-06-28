@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class VideoReq {
-    private Long id;
+    private String id;
     private String linkVideo;
-    private Long postid;
+    private String postid;
 
 }

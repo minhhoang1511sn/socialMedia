@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 public class UserReq {
-    private Long id;
+    private String id;
     private String address;
     private String gender;
     private String password;

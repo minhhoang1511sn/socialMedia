@@ -2,6 +2,8 @@ package com.social.socialnetwork.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Reference;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -9,18 +11,16 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "confirmation_code")
+@Document(collection = "confirmation_code")
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationCode implements Serializable {
     private static  final int EXPIRATION_TIME = 10;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user")
+    @Embedded
     private User user;
 
     private Date expirationTime;

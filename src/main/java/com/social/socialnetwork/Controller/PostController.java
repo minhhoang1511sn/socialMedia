@@ -50,7 +50,7 @@ public class PostController {
         }
     }
     @DeleteMapping("/delete-post/{id}")
-    public ResponseEntity<?> deletePost( @PathVariable Long id)
+    public ResponseEntity<?> deletePost( @PathVariable String id)
     {
         if (postService.deletePost(id)) {
             return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
@@ -60,7 +60,7 @@ public class PostController {
 
     }
     @GetMapping("/posts")
-    public ResponseEntity<?> listPost(@RequestParam  Long userId){
+    public ResponseEntity<?> listPost(@RequestParam  String userId){
         List<Post> posts = postService.getAllPost(userId);
         if(posts!=null)
         return ResponseEntity.ok(new ResponseDTO(true,"Success",posts));

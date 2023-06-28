@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 public class NotificationDTO {
-    private Long id;
+    private String id;
     private User user;
     private String content;
     private TypeNotifications typeNotifications;

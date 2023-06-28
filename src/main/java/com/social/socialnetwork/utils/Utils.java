@@ -26,7 +26,7 @@ public class Utils {
         return convFile;
     }
 
-    public static Long getIdCurrentUser(){
+    public static String getIdCurrentUser(){
         Authentication authentication =  SecurityContextHolder.getContext().getAuthentication();
         User u = (User) authentication.getPrincipal();
         return u.getId();

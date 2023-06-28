@@ -1,21 +1,21 @@
 package com.social.socialnetwork.repository;
 
-import com.social.socialnetwork.model.Post;
-import com.social.socialnetwork.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import com.social.socialnetwork.model.*;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post,Long> {
+public interface PostRepository extends MongoRepository<Post,String> {
 
-    @Query("select p from Post p where p.user = :user order by p.createDate desc ")
-    List<Post> findPostOrderByCreateDate(User user);
-    @Query("select p from Post p order by p.createDate desc ")
-    List<Post> findAllPostOrderByCreateDate();
-    @Query("select p from Post p  where p.id = :id")
-    Post getById(Long id);
+    @Query("{ 'user' : ?0 }")
+    List<Post> findAllrderByCreateDate(User user);
+//    @Query(sort = "{ createDate : -1 }")
+//    List<Post> findAllPostOrderByCreateDate();
+    @Query("{'_id' : ?0}")
+    Post getById(String id);
+    @Query(value = "{ 'userId' : ?0 }", sort = "{ 'createDate' : -1 }")
+    List<Post> getAllPostByUser(String userId);
 }

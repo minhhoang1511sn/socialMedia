@@ -39,56 +39,58 @@ public class PostServiceIplm implements PostService {
     @Override
     public Post createPost(PostReq postReq,  MultipartFile images)
     {
-        Long idCurrentUser = Utils.getIdCurrentUser();
+        String idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
         if(check){
             Post post = new Post();
             User user = userService.findById(idCurrentUser);
             UserPost userPost = new UserPost();
             userPost.setUserId(user.getId());
-            if(user.getAvatarLink()!=null)
-            userPost.setAvatar(user.getAvatarLink().getImgLink());
+            if(user.getImage()!=null)
+            userPost.setAvatar(user.getImage().getImgLink());
             userPost.setFirstName(user.getFirstName());
             userPost.setLastName(user.getLastName());
             userPostRepository.save(userPost);
             post.setContent(postReq.getContent());
             post.setCountLike(0L);
             post.setPostType(PostType.PUBLIC);
-            post.setUser(user);
             post.setUserPost(userPost);
             post.setCreateDate(new Date());
             postRepository.save(post);
+            List<Post> userPosts = user.getPosts();
+            if(userPosts == null){
+                userPosts = new ArrayList<>();
+            }
+            userPosts.add(post);
+            user.setPosts(userPosts);
+            userRepository.save(user);
             if(images!=null){
                 uploadImage(post.getId(), images);
             }
-
-            List<Post> postbyUser = user.getPosts();
-            postbyUser.add(post);
-            user.setPosts(postbyUser);
-            return postRepository.save(post);
+             postRepository.save(post);
+             return post;
         } else {
             throw new AppException(404, "Product or Comment not exits.");
         }
     }
 
     @Override
-    public Post findById(Long id) {
+    public Post findById(String id) {
         Optional<Post> post = postRepository.findById(id);
         return post.orElse(null);
 
     }
     @Override
-    public boolean deletePost(Long id){
-        Long idCurrentUser = Utils.getIdCurrentUser();
+    public boolean deletePost(String id){
         Post postDelete = findById(id);
-        if(postDelete !=null && postDelete.getUser().getId() == idCurrentUser)
+        if(postDelete !=null)
         {
-            Image image = postDelete.getImages();
-            List<Comment> commentList = postDelete.getCommentList();
-            if(image!=null){
-                image.setUser(null);
-                image.setPost(null);
-                imageRepository.deleteById(image.getId());
+            List<Image> images = postDelete.getImages();
+            List<Comment> commentList = postDelete.getComments();
+            if(images!=null){
+                for (Image image : images) {
+                    imageRepository.deleteById(image.getId());
+                }
             }
 
             if(commentList!=null){
@@ -99,38 +101,36 @@ public class PostServiceIplm implements PostService {
                 }
             }
 
-            postDelete.setCommentList(null);
+            postDelete.setComments(null);
             postDelete.setImages(null);
             postDelete.setPostType(null);
-            postDelete.setUser(null);
             postRepository.deleteById(id);
             return true;
         }
         else throw new AppException(404, "Post does not exits.");
     }
     @Override
-    public List<Post> getAllPost(Long id)
+    public List<Post> getAllPost(String id)
     {
         User user = userRepository.findUserById(id);
-        List<Post> posts = postRepository.findPostOrderByCreateDate(user);
+        List<Post> posts = user.getPosts();
         return posts;
     }
 
     @Override
     public Post updatePost(PostReq postReq,  MultipartFile images){
         Post postUpdate = postRepository.findById(postReq.getId()).orElse(null);
-        Long idCurrentUser = Utils.getIdCurrentUser();
-        if(postUpdate != null && idCurrentUser == postUpdate.getUser().getId())
+        String idCurrentUser = Utils.getIdCurrentUser();
+        if(postUpdate != null)
         {
             uploadImage(postUpdate.getId(), images);
-            List<Comment> commentList = postUpdate.getCommentList();
-            User curUser = userRepository.findUserById(idCurrentUser);
-            UserPost uc = postUpdate.getUserPost();
+            List<Comment> commentList = postUpdate.getComments();
+            List<UserPost> uc = userPostRepository.findAllByUserId(idCurrentUser);
+            UserPost u = uc.get(0);
             PostType postType = postUpdate.getPostType();
             postUpdate.setContent(postReq.getContent());
-            postUpdate.setUser(curUser);
-            postUpdate.setUserPost(uc);
-            postUpdate.setCommentList(commentList);
+            postUpdate.setUserPost(u);
+            postUpdate.setComments(commentList);
             postUpdate.setCreateDate(new Date());
             postUpdate.setPostType(postType);
             return postRepository.save(postUpdate);
@@ -139,28 +139,34 @@ public class PostServiceIplm implements PostService {
             throw new AppException(400,"Post does not exists");
     }
     @Override
-    public String uploadImage(Long postId, MultipartFile images) {
-        Long idCurrentUser = Utils.getIdCurrentUser();
+    public String uploadImage(String postId, MultipartFile images) {
+        String idCurrentUser = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(idCurrentUser);
         User user = userRepository.findUserById(idCurrentUser);
         Image image = new Image();
-        Post post = postRepository.getReferenceById(postId);
+        Post post = postRepository.getById(postId);
         if(check && post!=null){
                 try {
                     String url = cloudinaryUpload.uploadImage(images,null);
                     image.setImgLink(url);
-                    image.setPost(post);
-                    image.setUser(user);
                     image.setPostType(post.getPostType());
                 } catch (IOException e) {
                     throw new AppException(400,"Failed");
                 }
             ;
             imageRepository.save(image);
-            post.setImages(image);
+            List<Image> imageList = imageRepository.getAllImageByPost(post);
+                imageList.add(image);
+            post.setImages(imageList);
             List<Image> imageUser = user.getImages();
+            if(imageUser == null)
+            {
+                imageUser = new ArrayList<>();
+            }
             imageUser.add(image);
             user.setImages(imageUser);
+            postRepository.save(post);
+            userRepository.save(user);
             String url =image.getImgLink();
 
             return url;
@@ -172,7 +178,7 @@ public class PostServiceIplm implements PostService {
 
     @Override
     public List<Post> gettingPostByFriend() {
-        List<User> users = userRepository.getAllUser();
+        List<User> users = userRepository.findAll();
         User curU = userService.getCurrentUser();
         List<Post> newfeeds = new ArrayList<>();
         users.forEach(u->{
@@ -184,9 +190,8 @@ public class PostServiceIplm implements PostService {
    return  newfeeds;
     }
     @Override
-    public List<Post> getAllPostByUser(Long userId) {
-        User user = userRepository.findUserById(userId);
-        List<Post> posts = postRepository.findPostOrderByCreateDate(user);
+    public List<Post> getAllPostByUser(String userId) {
+        List<Post> posts = postRepository.getAllPostByUser(userId);
         return posts;
     }
 

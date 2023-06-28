@@ -10,8 +10,8 @@ import java.util.List;
 
 @Data
 public class PostResp {
-    private Long id;
-    private Long user;
+    private String id;
+    private String user;
     private Long countLike;
     private List<Comment> commentList;
     private Image imageList;

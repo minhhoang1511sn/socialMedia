@@ -25,7 +25,7 @@ public class ReportServiceIplm implements ReportService {
     @Override
     public Report createReport(ReportReq reportReq) {
         User user = userRepository.findUserById(Utils.getIdCurrentUser());
-        Post post = postRepository.getReferenceById(reportReq.getPostId());
+        Post post = postRepository.getById(reportReq.getPostId());
         if(user!=null && post!=null){
             Report report = new Report();
             report.setContentReport(reportReq.getContentReport());

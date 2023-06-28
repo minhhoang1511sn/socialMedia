@@ -5,40 +5,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "image")
+@Document(collection = "images")
 public class Image implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String imgLink;
-    @JsonBackReference(value = "images-post")
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Post post;
-    @JsonBackReference
-    @ManyToOne(cascade = {CascadeType.ALL})
-    private User user;
     private PostType postType;
 
-    public Image(Object o, String imgLink, Post post) {
+    public Image(Object o, String imgLink) {
         this.imgLink = imgLink;
-        this.post = post;
+//        this.post = post;
 
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getImgLink() {

@@ -2,20 +2,19 @@ package com.social.socialnetwork.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "report")
+@Document(collection = "report")
 public class Report {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String contentReport;
-    @OneToOne
+    @Embedded
     private User user;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Embedded
     private Post post;
 }

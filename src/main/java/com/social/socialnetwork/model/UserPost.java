@@ -2,20 +2,19 @@ package com.social.socialnetwork.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Getter
 @Setter
 @Builder
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_post")
+@Document(collection = "user_post")
 public class UserPost {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String firstName;
     private String lastName;
-    private Long userId;
+    private String userId;
     private String avatar;
 }

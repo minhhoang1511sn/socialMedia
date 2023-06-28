@@ -33,17 +33,16 @@ public class UserController {
     @GetMapping("/user")
     public ResponseEntity<?> getCurrentUser(){
         User user = userService.getCurrentUser();
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",user));
     }
     @GetMapping("/user/{id}")
-    public ResponseEntity<?> getUser(@PathVariable("id") Long id){
+    public ResponseEntity<?> getUser(@PathVariable("id") String id){
         User user = userService.findById(id);
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",user));
     }
     @GetMapping("/alluser")
     public ResponseEntity<?> getAllUser(){
-        List<User> userlist = userService.findAllUser();
-        return ResponseEntity.ok().body(userlist);
+        return ResponseEntity.ok(new ResponseDTO(true,"Success",userService.findAllUser()));
     }
     @GetMapping("/search-user")
     public ResponseEntity<?> getUserByName(@RequestParam("query") String query){
@@ -73,12 +72,12 @@ public class UserController {
                 null));
     }
     @GetMapping("/list-Friend")
-    public ResponseEntity<?> getFriendList(@RequestParam("userId") Long userId){
+    public ResponseEntity<?> getFriendList(@RequestParam("userId") String userId){
         List<User> friendList = friendService.getUserFriends(userId);
         return ResponseEntity.ok().body(new ResponseDTO(true,"Success",friendList));
     }
     @GetMapping("/is-Friend")
-    public ResponseEntity<?> getIsFriend(@RequestParam("friendId") Long friendId){
+    public ResponseEntity<?> getIsFriend(@RequestParam("friendId") String friendId){
         User curUser = userRepository.findUserById(Utils.getIdCurrentUser());
         User friend = userRepository.findUserById(friendId);
         Boolean isFriend = friendService.isFriend(curUser,friend);
@@ -88,19 +87,19 @@ public class UserController {
             return ResponseEntity.ok().body(new ResponseDTO(false,"User isn't friend",null));}
     }
     @GetMapping("/mutual-friends")
-    public ResponseEntity<?> MutualFriends(@RequestParam("userId") Long userId){
+    public ResponseEntity<?> MutualFriends(@RequestParam("userId") String userId){
 
         List<User> user = friendService.MutualFriends(userId);
         return ResponseEntity.ok().body(user);
     }
     @PostMapping("/add-friend")
-    public ResponseEntity<?> addFriend( @RequestParam("friendId")Long friendId){
+    public ResponseEntity<?> addFriend( @RequestParam("friendId")String friendId){
         User  currentUser = userService.findById(Utils.getIdCurrentUser());
         friendService.saveFriend(currentUser,friendId);
         return ResponseEntity.ok("Friend added successfully");
     }
     @DeleteMapping("/un-friend")
-    public ResponseEntity<?> unFriend( @RequestParam("friendId")Long friendId){
+    public ResponseEntity<?> unFriend( @RequestParam("friendId")String friendId){
         if (friendService.unFriend(friendId)){
             return ResponseEntity.ok(new ResponseDTO(true, "Success", null));
         }
@@ -122,7 +121,7 @@ public class UserController {
                 url));
     }
     @GetMapping("/images")
-    public ResponseEntity<?> getImages(@RequestParam("userId") Long userId){
+    public ResponseEntity<?> getImages(@RequestParam("userId") String userId){
         List<Image> images = userService.getimgByUser(userId);
         return ResponseEntity.ok().body(new ResponseDTO(true,"Success",images));
     }

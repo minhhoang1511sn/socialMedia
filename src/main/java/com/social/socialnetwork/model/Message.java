@@ -3,29 +3,28 @@ package com.social.socialnetwork.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "message")
+@Document(collection = "message")
 public class Message {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
+    private String id;
+    @Embedded
+    @Transient
     private User sender;
-    @OneToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
+    @Embedded
+    @Transient
     private User receiver;
-    @OneToOne(fetch = FetchType.EAGER)
+    @Embedded
     private UserMessage uSender;
-    @OneToOne(fetch = FetchType.EAGER)
+    @Embedded
     private UserMessage uReceiver;
     private String message;
     private LocalDateTime createTime;

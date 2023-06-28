@@ -33,13 +33,13 @@ public class CommentServiceIplm implements CommentService {
     private final UserCommentRepository userCommentRepository;
 
     @Override
-    public Comment findById(Long id) {
+    public Comment findById(String id) {
         Optional<Comment> comment = commentRepository.findById(id);
         return comment.orElse(null);
     }
     @Override
     public Comment postComment(CommentReq commentReq) {
-        Long userId = Utils.getIdCurrentUser();
+        String userId = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(userId) && postRepository.existsById(commentReq.getPostId());
         UserComment userComment = new UserComment();
         if(check){
@@ -50,8 +50,8 @@ public class CommentServiceIplm implements CommentService {
                 Post post = postRepository.findById(commentReq.getPostId()).orElse(null);
                 comment.setPost(post);
                 comment.setCreateTime(new Date());
-                if(user.getAvatarLink()!=null)
-                userComment.setAvatar(user.getAvatarLink().getImgLink());
+                if(user.getImage()!=null)
+                userComment.setAvatar(user.getImage().getImgLink());
                 userComment.setFirstName(user.getFirstName());
                 userComment.setLastName(user.getLastName());
                 userComment.setUserId(user.getId());
@@ -66,54 +66,41 @@ public class CommentServiceIplm implements CommentService {
 
 
     @Override
-    public List<Comment> getAllCommentByPost(Long postid) {
-        Post post = postRepository.getReferenceById(postid);
+    public List<Comment> getAllCommentByPost(String postid) {
+        Post post = postRepository.getById(postid);
         List<Comment> commentList = commentRepository.getCommentByPost(post);
         return commentList;
     }
 
     @Override
     public Comment updateComment(CommentReq commentReq) {
-        Long userId = Utils.getIdCurrentUser();
+        String userId = Utils.getIdCurrentUser();
         boolean check = userRepository.existsById(userId);
         if(check){
             Comment commentUpdate = findById(commentReq.getId());
-            UserComment uc = userCommentRepository.getReferenceById(commentReq.getId());
-            if(commentUpdate.getUserComment().getUserId() == userId)
-            {
-                if(commentUpdate != null) {
-                   commentUpdate.setContent(commentReq.getContent());
-                   commentUpdate.setUserComment(uc);
-                   commentUpdate.setRate(commentReq.getRate());
-                    return commentUpdate;
-                } else throw new AppException(404, "Comment ID not found");
-            }
-            else  throw new AppException(500, "User don't have permission");
+            List<UserComment> uc = userCommentRepository.findAllByUserId(userId);
+            UserComment u = uc.get(0);
+            if(commentUpdate != null) {
+               commentUpdate.setContent(commentReq.getContent());
+               commentUpdate.setUserComment(u);
+               commentUpdate.setRate(commentReq.getRate());
+                return commentUpdate;
+            } else throw new AppException(404, "Comment ID not found");
         }
         else throw new AppException(500, "User not found");
 
     }
 
     @Override
-    public boolean deleteComment(Long id) {
+    public boolean deleteComment(String id) {
         Comment comment = commentRepository.findById(id).orElse(null);
-        Long currentUser = Utils.getIdCurrentUser();
-        if(currentUser == comment.getUserComment().getUserId())
-        {
             if(comment != null){
                 commentRepository.deleteById(id);
-                Post post = comment.getPost();
-                List<Comment> commentList = post.getCommentList();
-                commentList.remove(comment);
-                post.setCommentList(commentList);
                 return  true;
             }
             else{
                 throw new AppException(404, "Comment ID not found");}
-        }
-        else{
-            throw new AppException(500, "User don't have permission to delete this comment");
-        }
+
     }
 
 }

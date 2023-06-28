@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class CommentReq {
-    private Long id;
+    private String id;
     private String content;
     private Double rate;
-    private Long postId;
-    private Long userCommentId;
+    private String postId;
+    private String userCommentId;
     private Image image;
 }
